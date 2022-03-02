@@ -15,6 +15,14 @@ function useFetch() {
       placement,
     });
   };
+  const openNotification_success = (placement) => {
+    notification.success({
+      message: `berhasil menhapus data `,
+      description:
+        "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
+      placement,
+    });
+  };
   function dataBase() {
     axios
       .get("http://localhost:8000/server")

@@ -21,9 +21,9 @@ export default function BasicTextFields() {
   const [training, setTraining] = useState("");
   const openNotification = (placement) => {
     notification.success({
-      message: `Notification `,
+      message: `Sukses Mengirim Data ke Server `,
       description:
-        "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
+        "Data sudah tersimpan di server pusat. Lihat di tab list untuk melihat data user lebih lengkap.",
       placement,
     });
   };

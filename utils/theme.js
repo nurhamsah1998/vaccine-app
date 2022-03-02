@@ -2,6 +2,9 @@ import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import { green, purple, teal, red, grey, lightBlue } from "@mui/material/colors";
 
 const style = createTheme({
+  typography: {
+    fontFamily: "Poppins",
+  },
   palette: {
     primary: {
       main: purple[500],
@@ -20,6 +23,13 @@ const style = createTheme({
     },
     label: {
       main: grey[600],
+    },
+  },
+  components: {
+    MuiButton: {
+      defaultProps: {
+        variant: "text",
+      },
     },
   },
 });

@@ -5,9 +5,11 @@ import TableData from "./table-data";
 
 function ListPatient() {
   const [data, setData] = useFetch();
-  console.log(data);
+  function nur() {
+    alert("sd");
+  }
   return (
-    <Drawer>
+    <Drawer onclick={true}>
       {/* <div>
         {Array.isArray(data)
           ? data.map((i) => {

@@ -1,56 +1,92 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "antd/dist/antd.css";
 import { Table, Modal, Tabs } from "antd";
 const { TabPane } = Tabs;
-import useFetch from "./component/useFetch";
+import { red, blue } from "@mui/material/colors";
+import axios from "axios";
+import { notification } from "antd";
+import "antd/dist/antd.css";
+import { Button, Box, Typography } from "@mui/material";
+const { confirm } = Modal;
+import Modalw from "./component/Modal";
+import { bgcolor } from "@mui/system";
 
 function TableData() {
-  const [data, page] = useFetch();
-  console.log(page.length);
+  const [server, setServer] = useState();
+  const [page, setPage] = useState(1);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modal, setModal] = useState([]);
+  const [confirm, setConfirm] = useState(false);
 
+  const openNotification_success = (placement) => {
+    notification.success({
+      message: `Berhasil Menghapus Data `,
+      description: "Semua informasi dari data tersebut sudah dihapus.",
+      placement,
+    });
+  };
+
+  function dataBase() {
+    axios
+      .get("http://localhost:8000/server")
+      .then((res) => {
+        setServer(res.data);
+        setPage(res?.data?.length);
+      })
+      .catch((error) => {
+        openNotification("bottomRight");
+      });
+  }
+
+  useEffect(() => {
+    dataBase();
+  }, []);
   const showModal = () => {
-    setIsModalVisible(true);
+    setIsModalVisible(false);
   };
 
   const handleOk = () => {
-    setIsModalVisible(false);
+    console.log(server);
   };
 
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
+  function handleDelete(e) {
+    axios.delete("http://localhost:8000/server/" + e._id).then((res) => {
+      openNotification_success("bottomRight");
+      setIsModalVisible(false);
+      setConfirm(false);
+      dataBase();
+    });
+  }
   const columns = [
     {
       title: "Name",
       width: "10%",
       dataIndex: "name",
-      render: (data) => <p style={{ fontWeight: 600 }}>{data}</p>,
+      render: (data) => <Typography>{data}</Typography>,
     },
     {
       title: "no. Telfon",
       width: "10%",
       dataIndex: "phone",
-      render: (data) => <p>{data}</p>,
+      render: (data) => <Typography>{data}</Typography>,
     },
     {
       title: "Alamat",
       width: "10%",
       dataIndex: "address",
-      render: (data) => <p>{data}</p>,
+      render: (data) => <Typography>{data}</Typography>,
     },
     {
       title: "Mentor",
       width: "10%",
       dataIndex: "mentor",
-      render: (data) => <p>{data}</p>,
+      render: (data) => <Typography>{data}</Typography>,
     },
     {
       title: "Training",
       width: "10%",
       dataIndex: "training",
-      render: (data) => <p>{data}</p>,
+      render: (data) => <Typography>{data}</Typography>,
     },
   ];
   function handleRow(e) {
@@ -59,64 +95,111 @@ function TableData() {
       setModal(e);
     }
   }
+  function nur() {
+    setConfirm(true);
+  }
+  function closeConfirm() {
+    setConfirm(false);
+  }
   return (
     <div>
+      <Modal
+        title={[<Typography style={{ margin: "0px" }}>Yakin Ingin Menghapus Data ?</Typography>]}
+        visible={confirm}
+        onCancel={closeConfirm}
+        footer={[
+          <Button sx={{ mr: 5 }} onClick={closeConfirm} color="secondary" variant="contained">
+            Batalkan
+          </Button>,
+          <Button onClick={() => handleDelete(modal)} color="warning" variant="contained">
+            Setuju
+          </Button>,
+        ]}
+      >
+        <Box>
+          <Typography fontSize="15px">
+            Dengan menyetujui penghapusan data, semua data akan terhapus meliputi nama, nomer
+            handphone, alamat, tanggal lahir, nama mentor dan training. Semua data tersebut akan
+            terhapus dan tidak bisa direcovery lagi !
+          </Typography>
+        </Box>
+      </Modal>
       <Table
         onRow={(record, rowIndex) => {
-          return { onClick: () => handleRow(record) };
+          return { onClick: () => handleRow(record), style: { cursor: "pointer" } };
         }}
         columns={columns}
         pagination={{
           pageSize: 3,
           total: page,
         }}
-        dataSource={data}
+        dataSource={server}
         bordered
       />
       <Modal
         title={`Profil Lengkap ${modal.name}`}
         visible={isModalVisible}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        cancelText={`Hapus Data ${modal.name}`}
+        onCancel={showModal}
+        closable={nur}
+        okText={`Modif Data ${modal.name}`}
+        footer={[
+          <Button onClick={nur} sx={{ mr: 5 }} color="warning" variant="contained">
+            Delete this data
+          </Button>,
+          <Button color="secondary" variant="contained">
+            Modify
+          </Button>,
+        ]}
       >
         <div>
           <Tabs type="card">
-            <TabPane tab="Profil Pribadi" key="1">
+            <TabPane tab={[<Typography>Short Profile</Typography>]} key="1">
               <div style={{ display: "flex", alignItems: "center" }}>
-                <p style={{ width: "160px" }}>NAMA</p>
-                <p>:</p>
-                <p style={{ marginLeft: "20px", fontWeight: 700 }}>{modal.name}</p>
+                <Typography style={{ width: "160px" }}>NAMA</Typography>
+                <Typography>:</Typography>
+                <Typography style={{ marginLeft: "20px", fontWeight: 700 }}>
+                  {modal.name}
+                </Typography>
               </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <p style={{ width: "160px" }}>no. Telpon</p>
-                <p>:</p>
-                <p style={{ marginLeft: "20px", fontWeight: 700 }}>{modal.phone}</p>
+              <div style={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
+                <Typography style={{ width: "160px" }}>no. Telpon</Typography>
+                <Typography>:</Typography>
+                <Typography style={{ marginLeft: "20px", fontWeight: 700 }}>
+                  {modal.phone}
+                </Typography>
               </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <p style={{ width: "160px" }}>Training</p>
-                <p>:</p>
-                <p style={{ marginLeft: "20px", fontWeight: 700 }}>{modal.training}</p>
+              <div style={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
+                <Typography style={{ width: "160px" }}>Training</Typography>
+                <Typography>:</Typography>
+                <Typography style={{ marginLeft: "20px", fontWeight: 700 }}>
+                  {modal.training}
+                </Typography>
               </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <p style={{ width: "160px" }}>Alamat</p>
-                <p>:</p>
-                <p style={{ marginLeft: "20px", fontWeight: 700 }}>{modal.address}</p>
+              <div style={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
+                <Typography style={{ width: "160px" }}>Alamat</Typography>
+                <Typography>:</Typography>
+                <Typography style={{ marginLeft: "20px", fontWeight: 700 }}>
+                  {modal.address}
+                </Typography>
               </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <p style={{ width: "160px" }}>Pendamping</p>
-                <p>:</p>
-                <p style={{ marginLeft: "20px", fontWeight: 700 }}>{modal.mentor}</p>
+              <div style={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
+                <Typography style={{ width: "160px" }}>Pendamping</Typography>
+                <Typography>:</Typography>
+                <Typography style={{ marginLeft: "20px", fontWeight: 700 }}>
+                  {modal.mentor}
+                </Typography>
               </div>
             </TabPane>
-            <TabPane tab="Dokument Dukungan" key="2">
-              <p>Content of Tab Pane 2</p>
-              <p>Content of Tab Pane 2</p>
-              <p>Content of Tab Pane 2</p>
+            <TabPane tab={[<Typography>Pendukung Lainnya</Typography>]} key="2">
+              <Typography>Content of Tab Pane 2</Typography>
+              <Typography>Content of Tab Pane 2</Typography>
+              <Typography>Content of Tab Pane 2</Typography>
             </TabPane>
-            <TabPane tab="Kelemahan" key="3">
-              <p>Content of Tab Pane 3</p>
-              <p>Content of Tab Pane 3</p>
-              <p>Content of Tab Pane 3</p>
+            <TabPane tab={[<Typography>Detail Profile</Typography>]} key="3">
+              <Typography>Content of Tab Pane 3</Typography>
+              <Typography>Content of Tab Pane 3</Typography>
+              <Typography>Content of Tab Pane 3</Typography>
             </TabPane>
           </Tabs>
         </div>
