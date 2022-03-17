@@ -10,6 +10,10 @@ export default function Document() {
           href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;1,900&display=swap"
           rel="stylesheet"
         />
+        <script src="https://unpkg.com/react/umd/react.production.min.js"></script>
+        <script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js"></script>
+        <script src="https://unpkg.com/prop-types/prop-types.min.js"></script>
+        <script src="https://unpkg.com/recharts/umd/Recharts.js"></script>
       </Head>
       <body>
         <Main />

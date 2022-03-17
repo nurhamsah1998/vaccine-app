@@ -8,8 +8,7 @@ import { notification } from "antd";
 import "antd/dist/antd.css";
 import { Button, Box, Typography } from "@mui/material";
 const { confirm } = Modal;
-import Modalw from "./component/Modal";
-import { bgcolor } from "@mui/system";
+import Diagram from "./component/Diagram";
 
 function TableData() {
   const [server, setServer] = useState();
@@ -25,6 +24,13 @@ function TableData() {
       placement,
     });
   };
+  const openNotificationEror = (placement) => {
+    notification.error({
+      message: `GAGAL MENGAKSES DATABASE`,
+      description: "Mohon cek jaringan internet anda. info lebih lanjut hubungi DEVELOPER",
+      placement,
+    });
+  };
 
   function dataBase() {
     axios
@@ -34,7 +40,7 @@ function TableData() {
         setPage(res?.data?.length);
       })
       .catch((error) => {
-        openNotification("bottomRight");
+        openNotificationEror("bottomRight");
       });
   }
 
@@ -59,33 +65,38 @@ function TableData() {
   }
   const columns = [
     {
+      key: "name",
       title: "Name",
       width: "10%",
       dataIndex: "name",
       render: (data) => <Typography>{data}</Typography>,
     },
     {
+      key: "phone",
       title: "no. Telfon",
       width: "10%",
       dataIndex: "phone",
       render: (data) => <Typography>{data}</Typography>,
     },
     {
+      key: "address",
       title: "Alamat",
       width: "10%",
       dataIndex: "address",
       render: (data) => <Typography>{data}</Typography>,
     },
     {
-      title: "Mentor",
+      key: "dad_name",
+      title: "Nama Ayah",
       width: "10%",
-      dataIndex: "mentor",
+      dataIndex: "dad_name",
       render: (data) => <Typography>{data}</Typography>,
     },
     {
-      title: "Training",
+      key: "mom_name",
+      title: "Nama Ibu",
       width: "10%",
-      dataIndex: "training",
+      dataIndex: "mom_name",
       render: (data) => <Typography>{data}</Typography>,
     },
   ];
@@ -101,6 +112,7 @@ function TableData() {
   function closeConfirm() {
     setConfirm(false);
   }
+  console.log(server);
   return (
     <div>
       <Modal
@@ -130,11 +142,12 @@ function TableData() {
         }}
         columns={columns}
         pagination={{
-          pageSize: 3,
+          pageSize: 5,
           total: page,
         }}
         dataSource={server}
         bordered
+        key={columns.key}
       />
       <Modal
         title={`Profil Lengkap ${modal.name}`}
@@ -162,32 +175,32 @@ function TableData() {
                   {modal.name}
                 </Typography>
               </div>
-              <div style={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
+              <div style={{ display: "flex", alignItems: "center" }}>
                 <Typography style={{ width: "160px" }}>no. Telpon</Typography>
                 <Typography>:</Typography>
                 <Typography style={{ marginLeft: "20px", fontWeight: 700 }}>
                   {modal.phone}
                 </Typography>
               </div>
-              <div style={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
-                <Typography style={{ width: "160px" }}>Training</Typography>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Typography style={{ width: "160px" }}>Nama Ibu</Typography>
                 <Typography>:</Typography>
                 <Typography style={{ marginLeft: "20px", fontWeight: 700 }}>
-                  {modal.training}
+                  {modal.mom_name}
                 </Typography>
               </div>
-              <div style={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
+              <div style={{ display: "flex", alignItems: "center" }}>
                 <Typography style={{ width: "160px" }}>Alamat</Typography>
                 <Typography>:</Typography>
                 <Typography style={{ marginLeft: "20px", fontWeight: 700 }}>
                   {modal.address}
                 </Typography>
               </div>
-              <div style={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
-                <Typography style={{ width: "160px" }}>Pendamping</Typography>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Typography style={{ width: "160px" }}>Nama Ayah</Typography>
                 <Typography>:</Typography>
                 <Typography style={{ marginLeft: "20px", fontWeight: 700 }}>
-                  {modal.mentor}
+                  {modal.dad_name}
                 </Typography>
               </div>
             </TabPane>
@@ -196,10 +209,8 @@ function TableData() {
               <Typography>Content of Tab Pane 2</Typography>
               <Typography>Content of Tab Pane 2</Typography>
             </TabPane>
-            <TabPane tab={[<Typography>Detail Profile</Typography>]} key="3">
-              <Typography>Content of Tab Pane 3</Typography>
-              <Typography>Content of Tab Pane 3</Typography>
-              <Typography>Content of Tab Pane 3</Typography>
+            <TabPane tab={[<Typography>Diagram Nilai</Typography>]} key="3">
+              <Diagram />
             </TabPane>
           </Tabs>
         </div>

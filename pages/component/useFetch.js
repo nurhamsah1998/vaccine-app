@@ -11,7 +11,7 @@ function useFetch() {
     notification.error({
       message: `ERROR TO CONNECT DATABASE `,
       description:
-        "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
+        "This is the cdfgdfgdfgdfgdfgthe notification. This is the content of the notification.",
       placement,
     });
   };
@@ -35,9 +35,6 @@ function useFetch() {
       });
   }
 
-  useEffect(() => {
-    dataBase();
-  }, []);
   return [data, setData, page];
 }
 
