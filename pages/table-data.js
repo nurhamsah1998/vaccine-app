@@ -2,20 +2,23 @@ import React, { useState, useEffect } from "react";
 import "antd/dist/antd.css";
 import { Table, Modal, Tabs } from "antd";
 const { TabPane } = Tabs;
-import { red, blue } from "@mui/material/colors";
+import { useRouter } from "next/router";
 import axios from "axios";
 import { notification } from "antd";
 import "antd/dist/antd.css";
+import { grey } from "@mui/material/colors";
 import { Button, Box, Typography } from "@mui/material";
-const { confirm } = Modal;
+import address from "./component/Address";
 import Diagram from "./component/Diagram";
 
 function TableData() {
-  const [server, setServer] = useState();
+  const router = useRouter();
+  const [server, setServer] = useState(null);
   const [page, setPage] = useState(1);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modal, setModal] = useState([]);
   const [confirm, setConfirm] = useState(false);
+  const [nilai, setNilai] = useState(1);
 
   const openNotification_success = (placement) => {
     notification.success({
@@ -36,7 +39,7 @@ function TableData() {
     axios
       .get("http://localhost:8000/server")
       .then((res) => {
-        setServer(res.data);
+        setServer(res?.data);
         setPage(res?.data?.length);
       })
       .catch((error) => {
@@ -104,6 +107,7 @@ function TableData() {
     if (e._id) {
       setIsModalVisible(true);
       setModal(e);
+      setNilai(e);
     }
   }
   function nur() {
@@ -112,7 +116,6 @@ function TableData() {
   function closeConfirm() {
     setConfirm(false);
   }
-  console.log(server);
   return (
     <div>
       <Modal
@@ -157,12 +160,15 @@ function TableData() {
         closable={nur}
         okText={`Modif Data ${modal.name}`}
         footer={[
-          <Button onClick={nur} sx={{ mr: 5 }} color="warning" variant="contained">
-            Delete this data
-          </Button>,
-          <Button color="secondary" variant="contained">
-            Modify
-          </Button>,
+          <Typography color={grey[500]} textAlign="center">
+            SDN Gotham II Jl.Ilmiah No. 46 Kode pos : 656776
+          </Typography>,
+          // <Button onClick={nur} sx={{ mr: 5 }} color="warning" variant="contained">
+          //   Delete this data
+          // </Button>,
+          // <Button color="secondary" variant="contained">
+          //   Modify
+          // </Button>,
         ]}
       >
         <div>
@@ -204,13 +210,40 @@ function TableData() {
                 </Typography>
               </div>
             </TabPane>
-            <TabPane tab={[<Typography>Pendukung Lainnya</Typography>]} key="2">
-              <Typography>Content of Tab Pane 2</Typography>
-              <Typography>Content of Tab Pane 2</Typography>
-              <Typography>Content of Tab Pane 2</Typography>
+            <TabPane tab={[<Typography>Alamat</Typography>]} key="2">
+              {address.map((e, i) => {
+                return (
+                  <div key={i} style={{ display: "flex", alignItems: "center" }}>
+                    <Typography style={{ width: "160px" }}>{e.title}</Typography>
+                    <Typography>:</Typography>
+                  </div>
+                );
+              })}
             </TabPane>
             <TabPane tab={[<Typography>Diagram Nilai</Typography>]} key="3">
-              <Diagram />
+              <div>
+                {nilai.kejuruan == null ? (
+                  <div>
+                    <img
+                      style={{ transform: "scale(0.5)", marginLeft: "-237px", marginTop: "-90px" }}
+                      src="/no-data.svg"
+                    />
+                    <p
+                      style={{
+                        textAlign: "center",
+                        marginTop: "-84px",
+                        fontSize: "20px",
+                        fontWeight: 600,
+                        color: grey[700],
+                      }}
+                    >
+                      Atooh!! Data masih kosong!
+                    </p>
+                  </div>
+                ) : (
+                  <Diagram nilai={nilai} />
+                )}
+              </div>
             </TabPane>
           </Tabs>
         </div>

@@ -21,6 +21,7 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import { useRouter } from "next/router";
 import BallotIcon from "@mui/icons-material/Ballot";
+import SchoolIcon from "@mui/icons-material/School";
 
 const drawerWidth = 240;
 
@@ -108,6 +109,8 @@ export default function MiniDrawer({ children, label }) {
       router.push("/add");
     } else if (e == 2) {
       router.push("/list-patient");
+    } else if (e == 3) {
+      router.push("/education-report");
     }
   }
   return (
@@ -147,8 +150,10 @@ export default function MiniDrawer({ children, label }) {
                   <HomeIcon />
                 ) : index == 1 ? (
                   <AddBoxIcon />
+                ) : index == 2 ? (
+                  <BallotIcon />
                 ) : (
-                  index == 2 && <BallotIcon />
+                  index == 3 && <SchoolIcon />
                 )}
               </ListItemIcon>
               <ListItemText primary={text} />
