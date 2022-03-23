@@ -1,10 +1,8 @@
 import React from "react";
 import Drawer from "./component/Drawer";
-import useFetch from "./component/useFetch";
 import TableData from "./table-data";
 
 function ListPatient() {
-  const [data, setData] = useFetch();
   function nur() {
     alert("sd");
   }

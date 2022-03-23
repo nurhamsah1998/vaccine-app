@@ -11,14 +11,19 @@ import "antd/dist/antd.css";
 import LoadingButton from "@mui/lab/LoadingButton";
 import axios from "axios";
 import { Spin } from "antd";
+const moment = require("moment");
 
 export default function BasicTextFields() {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [mentor, setMentor] = useState("");
-  const [training, setTraining] = useState("");
+  const [dad_name, setDad_name] = useState("");
+  const [mom_name, setMom_name] = useState("");
+  const [matematika, setMatematika] = useState("");
+  const [kejuruan, setKejuruan] = useState("");
+  const [bahasa_indonesia, setBahasa_indonesia] = useState("");
+  const [pendidikan_agama, setPendidikan_agama] = useState("");
   const openNotification = (placement) => {
     notification.success({
       message: `Sukses Mengirim Data ke Server `,
@@ -51,15 +56,21 @@ export default function BasicTextFields() {
   };
   function nurhamsah(e) {
     e.preventDefault();
+    var waktu = moment().format("MMMM Do YYYY, h:mm:ss a");
     setLoading(true);
     const body = {
       name: name,
       phone: phone,
       address: address,
-      mentor: mentor,
-      training: training,
+      dad_name: dad_name,
+      mom_name: mom_name,
+      date: waktu,
+      matematika: matematika || null,
+      kejuruan: kejuruan || null,
+      bahasa_indonesia: bahasa_indonesia || null,
+      pendidikan_agama: pendidikan_agama || null,
     };
-    if (name == "" || phone == "" || address == "" || mentor == "" || training == "") {
+    if (name == "" || phone == "" || address == "" || dad_name == "" || mom_name == "") {
       openNotification2("bottomRight");
       setLoading(false);
       return false;
@@ -82,8 +93,8 @@ export default function BasicTextFields() {
     setName("");
     setPhone("");
     setAddress("");
-    setMentor("");
-    setTraining("");
+    setDad_name("");
+    setMom_name("");
   }
   function hamsah1() {
     return (
@@ -99,6 +110,7 @@ export default function BasicTextFields() {
       </div>
     );
   }
+
   return (
     <>
       <Box component="form" onSubmit={nurhamsah} sx={{}} noValidate autoComplete="off">
@@ -135,19 +147,19 @@ export default function BasicTextFields() {
               color="secondary"
             />
             <TextField
-              onChange={(e) => setMentor(e.target.value)}
+              onChange={(e) => setDad_name(e.target.value)}
               id="outlined-basic"
-              value={mentor}
+              value={dad_name}
               sx={{ margin: "20px 0px" }}
-              label="Pendamping"
+              label="Nama Ayah"
               variant="outlined"
               color="secondary"
             />
             <TextField
-              onChange={(e) => setTraining(e.target.value)}
+              onChange={(e) => setMom_name(e.target.value)}
               id="outlined-basic"
-              value={training}
-              label="Training"
+              value={mom_name}
+              label="Nama Ibu"
               variant="outlined"
               color="secondary"
             />

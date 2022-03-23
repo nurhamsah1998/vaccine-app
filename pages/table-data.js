@@ -2,21 +2,23 @@ import React, { useState, useEffect } from "react";
 import "antd/dist/antd.css";
 import { Table, Modal, Tabs } from "antd";
 const { TabPane } = Tabs;
-import { red, blue } from "@mui/material/colors";
+import { useRouter } from "next/router";
 import axios from "axios";
 import { notification } from "antd";
 import "antd/dist/antd.css";
+import { grey } from "@mui/material/colors";
 import { Button, Box, Typography } from "@mui/material";
-const { confirm } = Modal;
-import Modalw from "./component/Modal";
-import { bgcolor } from "@mui/system";
+import address from "./component/Address";
+import Diagram from "./component/Diagram";
 
 function TableData() {
-  const [server, setServer] = useState();
+  const router = useRouter();
+  const [server, setServer] = useState(null);
   const [page, setPage] = useState(1);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modal, setModal] = useState([]);
   const [confirm, setConfirm] = useState(false);
+  const [nilai, setNilai] = useState(1);
 
   const openNotification_success = (placement) => {
     notification.success({
@@ -25,16 +27,23 @@ function TableData() {
       placement,
     });
   };
+  const openNotificationEror = (placement) => {
+    notification.error({
+      message: `GAGAL MENGAKSES DATABASE`,
+      description: "Mohon cek jaringan internet anda. info lebih lanjut hubungi DEVELOPER",
+      placement,
+    });
+  };
 
   function dataBase() {
     axios
       .get("http://localhost:8000/server")
       .then((res) => {
-        setServer(res.data);
+        setServer(res?.data);
         setPage(res?.data?.length);
       })
       .catch((error) => {
-        openNotification("bottomRight");
+        openNotificationEror("bottomRight");
       });
   }
 
@@ -59,33 +68,38 @@ function TableData() {
   }
   const columns = [
     {
+      key: "name",
       title: "Name",
       width: "10%",
       dataIndex: "name",
       render: (data) => <Typography>{data}</Typography>,
     },
     {
+      key: "phone",
       title: "no. Telfon",
       width: "10%",
       dataIndex: "phone",
       render: (data) => <Typography>{data}</Typography>,
     },
     {
+      key: "address",
       title: "Alamat",
       width: "10%",
       dataIndex: "address",
       render: (data) => <Typography>{data}</Typography>,
     },
     {
-      title: "Mentor",
+      key: "dad_name",
+      title: "Nama Ayah",
       width: "10%",
-      dataIndex: "mentor",
+      dataIndex: "dad_name",
       render: (data) => <Typography>{data}</Typography>,
     },
     {
-      title: "Training",
+      key: "mom_name",
+      title: "Nama Ibu",
       width: "10%",
-      dataIndex: "training",
+      dataIndex: "mom_name",
       render: (data) => <Typography>{data}</Typography>,
     },
   ];
@@ -93,6 +107,7 @@ function TableData() {
     if (e._id) {
       setIsModalVisible(true);
       setModal(e);
+      setNilai(e);
     }
   }
   function nur() {
@@ -130,11 +145,12 @@ function TableData() {
         }}
         columns={columns}
         pagination={{
-          pageSize: 3,
+          pageSize: 5,
           total: page,
         }}
         dataSource={server}
         bordered
+        key={columns.key}
       />
       <Modal
         title={`Profil Lengkap ${modal.name}`}
@@ -144,12 +160,15 @@ function TableData() {
         closable={nur}
         okText={`Modif Data ${modal.name}`}
         footer={[
-          <Button onClick={nur} sx={{ mr: 5 }} color="warning" variant="contained">
-            Delete this data
-          </Button>,
-          <Button color="secondary" variant="contained">
-            Modify
-          </Button>,
+          <Typography color={grey[500]} textAlign="center">
+            SDN Gotham II Jl.Ilmiah No. 46 Kode pos : 656776
+          </Typography>,
+          // <Button onClick={nur} sx={{ mr: 5 }} color="warning" variant="contained">
+          //   Delete this data
+          // </Button>,
+          // <Button color="secondary" variant="contained">
+          //   Modify
+          // </Button>,
         ]}
       >
         <div>
@@ -162,44 +181,69 @@ function TableData() {
                   {modal.name}
                 </Typography>
               </div>
-              <div style={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
+              <div style={{ display: "flex", alignItems: "center" }}>
                 <Typography style={{ width: "160px" }}>no. Telpon</Typography>
                 <Typography>:</Typography>
                 <Typography style={{ marginLeft: "20px", fontWeight: 700 }}>
                   {modal.phone}
                 </Typography>
               </div>
-              <div style={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
-                <Typography style={{ width: "160px" }}>Training</Typography>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Typography style={{ width: "160px" }}>Nama Ibu</Typography>
                 <Typography>:</Typography>
                 <Typography style={{ marginLeft: "20px", fontWeight: 700 }}>
-                  {modal.training}
+                  {modal.mom_name}
                 </Typography>
               </div>
-              <div style={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
+              <div style={{ display: "flex", alignItems: "center" }}>
                 <Typography style={{ width: "160px" }}>Alamat</Typography>
                 <Typography>:</Typography>
                 <Typography style={{ marginLeft: "20px", fontWeight: 700 }}>
                   {modal.address}
                 </Typography>
               </div>
-              <div style={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
-                <Typography style={{ width: "160px" }}>Pendamping</Typography>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Typography style={{ width: "160px" }}>Nama Ayah</Typography>
                 <Typography>:</Typography>
                 <Typography style={{ marginLeft: "20px", fontWeight: 700 }}>
-                  {modal.mentor}
+                  {modal.dad_name}
                 </Typography>
               </div>
             </TabPane>
-            <TabPane tab={[<Typography>Pendukung Lainnya</Typography>]} key="2">
-              <Typography>Content of Tab Pane 2</Typography>
-              <Typography>Content of Tab Pane 2</Typography>
-              <Typography>Content of Tab Pane 2</Typography>
+            <TabPane tab={[<Typography>Alamat</Typography>]} key="2">
+              {address.map((e, i) => {
+                return (
+                  <div key={i} style={{ display: "flex", alignItems: "center" }}>
+                    <Typography style={{ width: "160px" }}>{e.title}</Typography>
+                    <Typography>:</Typography>
+                  </div>
+                );
+              })}
             </TabPane>
-            <TabPane tab={[<Typography>Detail Profile</Typography>]} key="3">
-              <Typography>Content of Tab Pane 3</Typography>
-              <Typography>Content of Tab Pane 3</Typography>
-              <Typography>Content of Tab Pane 3</Typography>
+            <TabPane tab={[<Typography>Diagram Nilai</Typography>]} key="3">
+              <div>
+                {nilai.kejuruan == null ? (
+                  <div>
+                    <img
+                      style={{ transform: "scale(0.5)", marginLeft: "-237px", marginTop: "-90px" }}
+                      src="/no-data.svg"
+                    />
+                    <p
+                      style={{
+                        textAlign: "center",
+                        marginTop: "-84px",
+                        fontSize: "20px",
+                        fontWeight: 600,
+                        color: grey[700],
+                      }}
+                    >
+                      Atooh!! Data masih kosong!
+                    </p>
+                  </div>
+                ) : (
+                  <Diagram nilai={nilai} />
+                )}
+              </div>
             </TabPane>
           </Tabs>
         </div>
