@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
-import "antd/dist/antd.css";
-import { Table, Modal, Tabs } from "antd";
+import React, { useState, useEffect } from 'react';
+import 'antd/dist/antd.css';
+import { Table, Modal, Tabs } from 'antd';
 const { TabPane } = Tabs;
-import { useRouter } from "next/router";
-import axios from "axios";
-import { notification } from "antd";
-import "antd/dist/antd.css";
-import { grey } from "@mui/material/colors";
-import { Button, Box, Typography } from "@mui/material";
-import address from "./component/Address";
-import Diagram from "./component/Diagram";
+import { useRouter } from 'next/router';
+import axios from 'axios';
+import { notification } from 'antd';
+import 'antd/dist/antd.css';
+import { grey } from '@mui/material/colors';
+import { Button, Box, Typography } from '@mui/material';
+import address from './component/Address';
+import Diagram from './component/Diagram';
 
 function TableData() {
   const router = useRouter();
@@ -23,27 +23,27 @@ function TableData() {
   const openNotification_success = (placement) => {
     notification.success({
       message: `Berhasil Menghapus Data `,
-      description: "Semua informasi dari data tersebut sudah dihapus.",
+      description: 'Semua informasi dari data tersebut sudah dihapus.',
       placement,
     });
   };
   const openNotificationEror = (placement) => {
     notification.error({
       message: `GAGAL MENGAKSES DATABASE`,
-      description: "Mohon cek jaringan internet anda. info lebih lanjut hubungi DEVELOPER",
+      description: 'Mohon cek jaringan internet anda. info lebih lanjut hubungi DEVELOPER',
       placement,
     });
   };
 
   function dataBase() {
     axios
-      .get("http://localhost:8000/server")
+      .get('http://localhost:8080/get')
       .then((res) => {
         setServer(res?.data);
         setPage(res?.data?.length);
       })
       .catch((error) => {
-        openNotificationEror("bottomRight");
+        openNotificationEror('bottomRight');
       });
   }
 
@@ -59,8 +59,8 @@ function TableData() {
   };
 
   function handleDelete(e) {
-    axios.delete("http://localhost:8000/server/" + e._id).then((res) => {
-      openNotification_success("bottomRight");
+    axios.delete('http://localhost:8000/server/' + e._id).then((res) => {
+      openNotification_success('bottomRight');
       setIsModalVisible(false);
       setConfirm(false);
       dataBase();
@@ -68,47 +68,45 @@ function TableData() {
   }
   const columns = [
     {
-      key: "name",
-      title: "Name",
-      width: "10%",
-      dataIndex: "name",
+      key: 'name',
+      title: 'Name',
+      width: '10%',
+      dataIndex: 'name',
       render: (data) => <Typography>{data}</Typography>,
     },
     {
-      key: "phone",
-      title: "no. Telfon",
-      width: "10%",
-      dataIndex: "phone",
+      key: 'phone',
+      title: 'no. Telfon',
+      width: '10%',
+      dataIndex: 'phone',
       render: (data) => <Typography>{data}</Typography>,
     },
     {
-      key: "address",
-      title: "Alamat",
-      width: "10%",
-      dataIndex: "address",
+      key: 'address',
+      title: 'Alamat',
+      width: '10%',
+      dataIndex: 'address',
       render: (data) => <Typography>{data}</Typography>,
     },
     {
-      key: "dad_name",
-      title: "Nama Ayah",
-      width: "10%",
-      dataIndex: "dad_name",
+      key: 'dad_name',
+      title: 'Nama Ayah',
+      width: '10%',
+      dataIndex: 'dad_name',
       render: (data) => <Typography>{data}</Typography>,
     },
     {
-      key: "mom_name",
-      title: "Nama Ibu",
-      width: "10%",
-      dataIndex: "mom_name",
+      key: 'mom_name',
+      title: 'Nama Ibu',
+      width: '10%',
+      dataIndex: 'mom_name',
       render: (data) => <Typography>{data}</Typography>,
     },
   ];
   function handleRow(e) {
-    if (e._id) {
-      setIsModalVisible(true);
-      setModal(e);
-      setNilai(e);
-    }
+    setIsModalVisible(true);
+    setModal(e);
+    setNilai(e);
   }
   function nur() {
     setConfirm(true);
@@ -119,7 +117,7 @@ function TableData() {
   return (
     <div>
       <Modal
-        title={[<Typography style={{ margin: "0px" }}>Yakin Ingin Menghapus Data ?</Typography>]}
+        title={[<Typography style={{ margin: '0px' }}>Yakin Ingin Menghapus Data ?</Typography>]}
         visible={confirm}
         onCancel={closeConfirm}
         footer={[
@@ -133,19 +131,18 @@ function TableData() {
       >
         <Box>
           <Typography fontSize="15px">
-            Dengan menyetujui penghapusan data, semua data akan terhapus meliputi nama, nomer
-            handphone, alamat, tanggal lahir, nama mentor dan training. Semua data tersebut akan
+            Dengan menyetujui penghapusan data, semua data akan terhapus meliputi nama, nomer handphone, alamat, tanggal lahir, nama mentor dan training. Semua data tersebut akan
             terhapus dan tidak bisa direcovery lagi !
           </Typography>
         </Box>
       </Modal>
       <Table
         onRow={(record, rowIndex) => {
-          return { onClick: () => handleRow(record), style: { cursor: "pointer" } };
+          return { onClick: () => handleRow(record), style: { cursor: 'pointer' } };
         }}
         columns={columns}
         pagination={{
-          pageSize: 5,
+          pageSize: 10,
           total: page,
         }}
         dataSource={server}
@@ -174,47 +171,37 @@ function TableData() {
         <div>
           <Tabs type="card">
             <TabPane tab={[<Typography>Short Profile</Typography>]} key="1">
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Typography style={{ width: "160px" }}>NAMA</Typography>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Typography style={{ width: '160px' }}>NAMA</Typography>
                 <Typography>:</Typography>
-                <Typography style={{ marginLeft: "20px", fontWeight: 700 }}>
-                  {modal.name}
-                </Typography>
+                <Typography style={{ marginLeft: '20px', fontWeight: 700 }}>{modal.name}</Typography>
               </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Typography style={{ width: "160px" }}>no. Telpon</Typography>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Typography style={{ width: '160px' }}>no. Telpon</Typography>
                 <Typography>:</Typography>
-                <Typography style={{ marginLeft: "20px", fontWeight: 700 }}>
-                  {modal.phone}
-                </Typography>
+                <Typography style={{ marginLeft: '20px', fontWeight: 700 }}>{modal.phone}</Typography>
               </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Typography style={{ width: "160px" }}>Nama Ibu</Typography>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Typography style={{ width: '160px' }}>Nama Ibu</Typography>
                 <Typography>:</Typography>
-                <Typography style={{ marginLeft: "20px", fontWeight: 700 }}>
-                  {modal.mom_name}
-                </Typography>
+                <Typography style={{ marginLeft: '20px', fontWeight: 700 }}>{modal.mom_name}</Typography>
               </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Typography style={{ width: "160px" }}>Alamat</Typography>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Typography style={{ width: '160px' }}>Alamat</Typography>
                 <Typography>:</Typography>
-                <Typography style={{ marginLeft: "20px", fontWeight: 700 }}>
-                  {modal.address}
-                </Typography>
+                <Typography style={{ marginLeft: '20px', fontWeight: 700 }}>{modal.address}</Typography>
               </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Typography style={{ width: "160px" }}>Nama Ayah</Typography>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Typography style={{ width: '160px' }}>Nama Ayah</Typography>
                 <Typography>:</Typography>
-                <Typography style={{ marginLeft: "20px", fontWeight: 700 }}>
-                  {modal.dad_name}
-                </Typography>
+                <Typography style={{ marginLeft: '20px', fontWeight: 700 }}>{modal.dad_name}</Typography>
               </div>
             </TabPane>
             <TabPane tab={[<Typography>Alamat</Typography>]} key="2">
               {address.map((e, i) => {
                 return (
-                  <div key={i} style={{ display: "flex", alignItems: "center" }}>
-                    <Typography style={{ width: "160px" }}>{e.title}</Typography>
+                  <div key={i} style={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography style={{ width: '160px' }}>{e.title}</Typography>
                     <Typography>:</Typography>
                   </div>
                 );
@@ -224,15 +211,12 @@ function TableData() {
               <div>
                 {nilai.kejuruan == null ? (
                   <div>
-                    <img
-                      style={{ transform: "scale(0.5)", marginLeft: "-237px", marginTop: "-90px" }}
-                      src="/no-data.svg"
-                    />
+                    <img style={{ transform: 'scale(0.5)', marginLeft: '-237px', marginTop: '-90px' }} src="/no-data.svg" />
                     <p
                       style={{
-                        textAlign: "center",
-                        marginTop: "-84px",
-                        fontSize: "20px",
+                        textAlign: 'center',
+                        marginTop: '-84px',
+                        fontSize: '20px',
                         fontWeight: 600,
                         color: grey[700],
                       }}
