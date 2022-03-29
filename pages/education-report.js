@@ -9,9 +9,15 @@ import 'antd/dist/antd.css';
 import { Button, Box, Typography, TextField } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Drawer from './component/Drawer';
-import { grey, red, orange, green } from '@mui/material/colors';
+import { red, orange, green } from '@mui/material/colors';
+import { useQuery } from 'react-query';
 
 function EducationReport() {
+  const { isLoading } = useQuery('dataServer', () => {
+    axios.get('http://localhost:8080/get').then((res) => {
+      console.log(res.data, 'ini feth');
+    });
+  });
   const [loading, setLoading] = useState(false);
   const [server, setServer] = useState([]);
   const [page, setPage] = useState(1);
@@ -65,6 +71,7 @@ function EducationReport() {
       .then((res) => {
         setServer(res.data);
         setPage(res?.data?.length);
+        console.log('ini dari database useEffect');
       })
       .catch((error) => {
         openNotificationEror('bottomRight');
@@ -239,10 +246,13 @@ function EducationReport() {
     axios
       .delete('http://localhost:8080/remove/' + e.id)
       .then((res) => {
-        dataBase();
-        openNotification_success('bottomRight');
-        setIsModalVisible(false);
-        setConfirm(false);
+        setTimeout(() => {
+          dataBase();
+          openNotification_success('bottomRight');
+          setIsModalVisible(false);
+          setConfirm(false);
+          setLoading(false);
+        }, 500);
       })
       .catch((er) => {
         console.log(er);
@@ -310,19 +320,30 @@ function EducationReport() {
           </Typography>
         </Box>
       </Modal>
-      <Table
-        onRow={(record, rowIndex) => {
-          return { onClick: () => handleRow(record), style: { cursor: 'pointer' } };
-        }}
-        columns={columns}
-        pagination={{
-          pageSize: 10,
-          total: page,
-        }}
-        dataSource={server}
-        bordered
-        key={columns.key}
-      />
+      <Box>
+        {server?.length < 1 ? (
+          <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
+            <img style={{ transform: 'scale(0.5)', marginTop: '-190px' }} src="/empty-data.svg" />
+            <Typography textAlign={'center'} sx={{ marginTop: '-140px' }} fontWeight={700} fontSize={34}>
+              Tidak ada data yang ditampilkan !!
+            </Typography>
+          </div>
+        ) : (
+          <Table
+            onRow={(record, rowIndex) => {
+              return { onClick: () => handleRow(record), style: { cursor: 'pointer' } };
+            }}
+            columns={columns}
+            pagination={{
+              pageSize: 10,
+              total: page,
+            }}
+            dataSource={server}
+            bordered
+            key={columns.key}
+          />
+        )}
+      </Box>
       <Modal
         title={`Profil Lengkap ${modal.name}`}
         visible={isModalVisible}

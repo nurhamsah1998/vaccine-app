@@ -118,41 +118,33 @@ export default function BasicTextFields() {
   }
 
   return (
-    <>
-      <Box component="form" onSubmit={nurhamsah} sx={{}} noValidate autoComplete="off">
-        <Grid container spacing={2} sx={{ display: 'flex', marginBottom: '20px' }}>
-          <Grid xs={6} item sx={{ display: 'grid' }}>
-            <TextField id="outlined-basic" value={name} onChange={(e) => setName(e.target.value)} label="Nama" variant="outlined" color="secondary" />
-            <TextField
-              id="outlined-basic"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              label="No. telp"
-              type="number"
-              variant="outlined"
-              color="secondary"
-              sx={{ margin: '20px 0px' }}
-            />
-            <SelectInut id="outlined-basic" x="100%" label="Jenis vaksin" />
-          </Grid>
-
-          <Grid item sx={{ display: 'grid' }} xs={6}>
-            <TextField id="outlined-basic" label="Alamat" value={address} onChange={(e) => setAddress(e.target.value)} variant="outlined" color="secondary" />
-            <TextField
-              onChange={(e) => setDad_name(e.target.value)}
-              id="outlined-basic"
-              value={dad_name}
-              sx={{ margin: '20px 0px' }}
-              label="Nama Ayah"
-              variant="outlined"
-              color="secondary"
-            />
-            <TextField onChange={(e) => setMom_name(e.target.value)} id="outlined-basic" value={mom_name} label="Nama Ibu" variant="outlined" color="secondary" />
-          </Grid>
-        </Grid>
-
+    <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-around' }}>
+      <Box component="form" onSubmit={nurhamsah} sx={{ display: 'grid', minWidth: '500px' }} noValidate autoComplete="off">
+        <TextField id="outlined-basic" value={name} onChange={(e) => setName(e.target.value)} label="Nama" variant="outlined" color="secondary" />
+        <TextField
+          id="outlined-basic"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          label="No. telp"
+          type="number"
+          variant="outlined"
+          color="secondary"
+          sx={{ margin: '20px 0px' }}
+        />
+        <TextField id="outlined-basic" label="Alamat" value={address} onChange={(e) => setAddress(e.target.value)} variant="outlined" color="secondary" />
+        <TextField
+          onChange={(e) => setDad_name(e.target.value)}
+          id="outlined-basic"
+          value={dad_name}
+          sx={{ margin: '20px 0px' }}
+          label="Nama Ayah"
+          variant="outlined"
+          color="secondary"
+        />
+        <TextField onChange={(e) => setMom_name(e.target.value)} id="outlined-basic" value={mom_name} label="Nama Ibu" variant="outlined" color="secondary" />
         <LoadingButton
           // onClick={handleClick}
+          sx={{ mt: 2, p: 2 }}
           loading={loading}
           type="submit"
           variant="contained"
@@ -163,6 +155,9 @@ export default function BasicTextFields() {
           Kirim Data
         </LoadingButton>
       </Box>
-    </>
+      <Box sx={{ transform: 'scale(0.6)', mt: '-130px' }}>
+        <img src="/svg.svg" />
+      </Box>
+    </Box>
   );
 }
