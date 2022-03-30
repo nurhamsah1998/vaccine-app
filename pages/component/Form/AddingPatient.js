@@ -7,6 +7,7 @@ import TextField from '@mui/material/TextField';
 import SelectInut from '../SelectInput';
 import { useState } from 'react';
 import { notification } from 'antd';
+import { Typography } from '@mui/material';
 import 'antd/dist/antd.css';
 import LoadingButton from '@mui/lab/LoadingButton';
 import axios from 'axios';
@@ -14,6 +15,7 @@ import { uid } from 'uid';
 const moment = require('moment');
 
 export default function BasicTextFields() {
+  const [gender, setGender] = useState(false);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -64,6 +66,7 @@ export default function BasicTextFields() {
       dad_name: dad_name,
       mom_name: mom_name,
       date: waktu,
+      gender: gender ? 'perempuan' : 'laki-laki' || null,
       matematika: matematika || null,
       kejuruan: kejuruan || null,
       bahasa_indonesia: bahasa_indonesia || null,
@@ -81,7 +84,6 @@ export default function BasicTextFields() {
     axios
       .post('http://localhost:8000/post', body)
       .then((res) => {
-        console.log(res);
         setLoading(false);
         openNotification('bottomRight');
         setName('');
@@ -101,6 +103,7 @@ export default function BasicTextFields() {
           setMom_name(mom_name);
         }
       });
+    console.log(body);
   }
   function hamsah1() {
     return (
@@ -121,6 +124,17 @@ export default function BasicTextFields() {
     <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-around' }}>
       <Box component="form" onSubmit={nurhamsah} sx={{ display: 'grid', minWidth: '500px' }} noValidate autoComplete="off">
         <TextField id="outlined-basic" value={name} onChange={(e) => setName(e.target.value)} label="Nama" variant="outlined" color="secondary" />
+        <Box sx={{ mt: '20px', display: 'flex', alignItems: 'baseline' }}>
+          <Typography sx={{ fontSize: 17 }}>Jenis Kelamin</Typography>
+          <Box sx={{ ml: 5 }}>
+            <Button color="secondary" onClick={() => setGender(!gender)} variant={gender ? 'outlined' : 'contained'}>
+              Laki - laki
+            </Button>
+            <Button sx={{ ml: 3 }} color="secondary" onClick={() => setGender(!gender)} variant={gender ? 'contained' : 'outlined'}>
+              Perempuan
+            </Button>
+          </Box>
+        </Box>
         <TextField
           id="outlined-basic"
           value={phone}

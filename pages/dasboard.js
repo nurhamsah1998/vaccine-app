@@ -6,17 +6,17 @@ import axios from 'axios';
 import { green, indigo, blue, deepOrange, deepPurple, cyan } from '@mui/material/colors';
 
 function test() {
-  const { data, isLoading } = useQuery('get', () => {
-    return axios.get('http://localhost:8000/get');
+  const { data, isLoading } = useQuery('get', async () => {
+    return await axios.get('http://localhost:8000/get');
   });
   const userGender = data?.data?.map((e) => {
     return e.gender;
   });
   const femaleGender = userGender?.filter((e) => {
-    return e == 'Perempuan';
+    return e == 'perempuan';
   });
   const maleGender = userGender?.filter((e) => {
-    return e == 'Laki-Laki';
+    return e == 'laki-laki';
   });
   return (
     <Drawer label="DASBOARD">
@@ -52,7 +52,7 @@ function test() {
             </Box>
             <Box sx={{ position: 'absolute', bottom: '0px', right: '0px', p: 2 }}>
               <Typography fontSize={23} color="white">
-                856 Total Siswa
+                {femaleGender?.length + maleGender?.length} Total Siswa
               </Typography>
             </Box>
           </Box>
